@@ -13,7 +13,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int rating;
+    private double rating;
     private int reviewerAge;
     private String reviewerCountry;
     private LocalDate date;
