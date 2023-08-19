@@ -1,4 +1,4 @@
-package com.ssosnik.apprating;
+package com.ssosnik.apprating.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,12 +18,12 @@ public enum AGE_GROUP {
     private final int from;
     private final int to;
 
-    public boolean isInRange(int age) {
-        return age >= from && age <= to;
-    }
+//    public boolean isInRange(int age) {
+//        return age >= from && age <= to;
+//    }
 
 //    @Override
-//    public String toString() {
+//    public String toUserString() {
 //        return to > 100 ?
 //                String.format("%d+", from) :
 //                String.format("%d-%d", from, to);

@@ -1,4 +1,4 @@
-package com.ssosnik.apprating;
+package com.ssosnik.apprating.api;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
