@@ -17,7 +17,7 @@ public class DailyCsvFileWatcherService {
     @Autowired
     private DailyCsvFileProcessor dailyCsvFileProcessor;
 
-    @PostConstruct
+//    @PostConstruct
     public void watchDirectory() {
         Path directory = getDailyCsvFolder();
 
