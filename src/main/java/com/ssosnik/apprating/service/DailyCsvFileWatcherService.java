@@ -19,22 +19,31 @@ public class DailyCsvFileWatcherService {
 
     @PostConstruct
     public void watchDirectory() {
-        try {
-            WatchService watchService = FileSystems.getDefault().newWatchService();
-            Path directory = getDailyCsvFolder();
+        Path directory = getDailyCsvFolder();
 
-            directory.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
-
-            while (true) {
-                WatchKey key = watchService.take();
+        try (WatchService watchService = createWatchService(directory)) {
+            WatchKey key;
+            while ((key = watchService.take()) != null) {
                 for (WatchEvent<?> event : key.pollEvents()) {
                     Path filePath = directory.resolve((Path) event.context());
                     dailyCsvFileProcessor.processCsvFile(filePath);
                 }
                 key.reset();
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static WatchService createWatchService(Path directory)  {
+        try {
+            WatchService watchService = FileSystems.getDefault().newWatchService();
+            directory.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
+            return watchService;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to initialize WatchService.", e);
         }
     }
 
@@ -46,11 +55,11 @@ public class DailyCsvFileWatcherService {
             try {
                 Files.createDirectories(directory);
             } catch (IOException e) {
-                throw new RuntimeException("Failed to create daily-csv-directory at: " + directory.toAbsolutePath().toString(), e);
+                throw new RuntimeException("Failed to create daily-csv-directory at: " + directory.toAbsolutePath(), e);
             }
         }
         if (!Files.isDirectory(directory)) {
-            throw new RuntimeException("daily-csv-directory path is not a directory: " + directory.toAbsolutePath().toString());
+            throw new RuntimeException("daily-csv-directory path is not a directory: " + directory.toAbsolutePath());
         }
         return directory;
     }
