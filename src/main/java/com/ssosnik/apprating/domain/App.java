@@ -16,4 +16,8 @@ public class App {
 
     private String appName;
     private String appUUID;
+
+//    Above code is not needed, since the average and other computations are done via JPQL query.
+//    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL)
+//    private List<Review> reviews = new ArrayList<>();
 }
