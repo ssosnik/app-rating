@@ -1,14 +1,18 @@
 package com.ssosnik.apprating.service;
 
+import com.ssosnik.apprating.domain.App;
 import com.ssosnik.apprating.domain.repository.AppRepository;
 import com.ssosnik.apprating.domain.repository.ReviewRepository;
+import com.ssosnik.apprating.dto.AppRatingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AppRatingService {
@@ -30,4 +34,28 @@ public class AppRatingService {
         // Get value, or throw an exception
         return averageRatingOptional.orElse(-1.0);
     }
+
+    public List<AppRatingDTO> getTopAppsByAverageRating() {
+        List<Object[]> topAppsWithRatingsList = appRepository.findTopAppsByAverageRating()
+                .stream()
+                .limit(100)
+                .collect(Collectors.toList());
+        return convertToAppRatingDTO(topAppsWithRatingsList);
+    }
+
+    private static List<AppRatingDTO> convertToAppRatingDTO(List<Object[]> topAppsWithRatingsList) {
+        return topAppsWithRatingsList.stream()
+                .limit(100)
+                .map(array -> {
+                    App app = (App) array[0];
+                    Double avgRating = (Double) array[1];
+                    return AppRatingDTO.builder()
+                            .appName(app.getAppName())
+                            .appUUID(app.getAppUUID())
+                            .averageRating(avgRating)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
 }
