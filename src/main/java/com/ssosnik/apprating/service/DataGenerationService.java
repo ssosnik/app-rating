@@ -1,5 +1,7 @@
-package com.ssosnik.apprating.domain;
+package com.ssosnik.apprating.service;
 
+import com.ssosnik.apprating.domain.App;
+import com.ssosnik.apprating.domain.Review;
 import com.ssosnik.apprating.domain.repository.AppRepository;
 import com.ssosnik.apprating.domain.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
@@ -13,7 +15,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class DataInitializer {
+public class DataGenerationService {
 
     private final AppRepository appRepository;
     private final ReviewRepository reviewRepository;
@@ -58,7 +60,7 @@ public class DataInitializer {
         int currentYear = today.getYear();
         int currentDay = today.getDayOfYear();
 
-        int randomDayOfYear = random.nextInt(currentDay) + 1; // Add 1 to avoid 0
+        int randomDayOfYear = random.nextInt(currentDay-5) + 1; // Add 1 to avoid 0
 
         return LocalDate.ofYearDay(currentYear, randomDayOfYear);
     }
