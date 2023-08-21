@@ -1,7 +1,9 @@
 package com.ssosnik.apprating.service;
 
+import com.ssosnik.apprating.event.DailyCsvLoadingCompletedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -10,11 +12,14 @@ import java.nio.file.*;
 @Service
 public class DailyCsvFileWatcherService {
 
-    @Value("${folder.path.daily-csv}")
+    @Value("{app-rating.folder.daily-csv}")
     private String csvFolderPath;
 
     @Autowired
     private DailyCsvFileProcessor dailyCsvFileProcessor;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     public void watchDirectory() {
         Path directory = getDailyCsvFolder();
@@ -25,6 +30,9 @@ public class DailyCsvFileWatcherService {
                 for (WatchEvent<?> event : key.pollEvents()) {
                     Path filePath = directory.resolve((Path) event.context());
                     dailyCsvFileProcessor.processCsvFile(filePath);
+
+                    // Publish the CsvLoadingCompletedEvent after CSV loading is done
+                    eventPublisher.publishEvent(new DailyCsvLoadingCompletedEvent(filePath));
                 }
                 key.reset();
             }

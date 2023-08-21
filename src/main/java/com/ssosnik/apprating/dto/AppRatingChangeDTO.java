@@ -5,8 +5,9 @@ import lombok.Data;
 
 @Builder
 @Data
-public class AppRatingDTO {
+public class AppRatingChangeDTO {
     private String appName;
     private String appUUID;
     private Double averageRating;
+    private Double previousAverageRating;
 }

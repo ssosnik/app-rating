@@ -21,13 +21,17 @@ public interface AppRepository extends JpaRepository<App, Long> {
             "AND r.reviewerAge BETWEEN :fromAge AND :toAge " +
             "GROUP BY a " +
             "ORDER BY avgRating DESC")
-    List<Object[]> findTopAppsByAverageRating(@Param("since") LocalDate since,
-                                              @Param("until") LocalDate until,
-                                              @Param("fromAge") int fromAge,
-                                              @Param("toAge") int toAge);
+    List<Object[]> findTopAppsByAverageRatingInAgeGroup(@Param("since") LocalDate since,
+                                                        @Param("until") LocalDate until,
+                                                        @Param("fromAge") int fromAge,
+                                                        @Param("toAge") int toAge);
 
-
-//    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.app.appUUID = :appUUID")
-//    Optional<Double> computeAverageRatingByUUID(@Param("appUUID") String appUUID);
+    @Query("SELECT a, AVG(r.rating) as avgRating " +
+            "FROM App a JOIN a.reviews r " +
+            "WHERE r.date BETWEEN :since AND :until " +
+            "GROUP BY a " +
+            "ORDER BY avgRating DESC")
+    List<Object[]> findAllAppsOrderedByAverageRating(@Param("since") LocalDate since,
+                                              @Param("until") LocalDate until);
 
 }

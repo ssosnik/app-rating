@@ -38,7 +38,7 @@ public class AppRatingService {
 
     public List<AppRatingDTO> getTopAppsByAverageRating(LocalDate since, LocalDate until, AGE_GROUP ageGroup) {
         List<Object[]> topAppsWithRatingsList = appRepository
-                .findTopAppsByAverageRating(since, until, ageGroup.getFrom(), ageGroup.getTo())
+                .findTopAppsByAverageRatingInAgeGroup(since, until, ageGroup.getFrom(), ageGroup.getTo())
                 .stream()
                 .limit(100)
                 .collect(Collectors.toList());
@@ -47,7 +47,6 @@ public class AppRatingService {
 
     private static List<AppRatingDTO> convertToAppRatingDTO(List<Object[]> topAppsWithRatingsList) {
         return topAppsWithRatingsList.stream()
-                .limit(100)
                 .map(array -> {
                     App app = (App) array[0];
                     Double avgRating = (Double) array[1];
