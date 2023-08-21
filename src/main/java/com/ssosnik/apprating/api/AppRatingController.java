@@ -27,7 +27,7 @@ public class AppRatingController {
     public List<AppRatingDTO> topApsForAgeGroup(@PathVariable AGE_GROUP ageGroup,
                                                 @RequestParam("since") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate since,
                                                 @RequestParam("until") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate until) {
-        return appRatingService.getTopAppsByAverageRating(since, until);
+        return appRatingService.getTopAppsByAverageRating(since, until, ageGroup);
     }
 
 }

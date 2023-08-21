@@ -1,5 +1,6 @@
 package com.ssosnik.apprating.service;
 
+import com.ssosnik.apprating.api.AGE_GROUP;
 import com.ssosnik.apprating.domain.App;
 import com.ssosnik.apprating.domain.repository.AppRepository;
 import com.ssosnik.apprating.domain.repository.ReviewRepository;
@@ -35,8 +36,9 @@ public class AppRatingService {
         return averageRatingOptional.orElse(-1.0);
     }
 
-    public List<AppRatingDTO> getTopAppsByAverageRating(LocalDate since, LocalDate until) {
-        List<Object[]> topAppsWithRatingsList = appRepository.findTopAppsByAverageRating(since, until)
+    public List<AppRatingDTO> getTopAppsByAverageRating(LocalDate since, LocalDate until, AGE_GROUP ageGroup) {
+        List<Object[]> topAppsWithRatingsList = appRepository
+                .findTopAppsByAverageRating(since, until, ageGroup.getFrom(), ageGroup.getTo())
                 .stream()
                 .limit(100)
                 .collect(Collectors.toList());
