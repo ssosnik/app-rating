@@ -35,8 +35,8 @@ public class AppRatingService {
         return averageRatingOptional.orElse(-1.0);
     }
 
-    public List<AppRatingDTO> getTopAppsByAverageRating() {
-        List<Object[]> topAppsWithRatingsList = appRepository.findTopAppsByAverageRating()
+    public List<AppRatingDTO> getTopAppsByAverageRating(LocalDate since, LocalDate until) {
+        List<Object[]> topAppsWithRatingsList = appRepository.findTopAppsByAverageRating(since, until)
                 .stream()
                 .limit(100)
                 .collect(Collectors.toList());
