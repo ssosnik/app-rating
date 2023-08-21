@@ -13,6 +13,8 @@ public interface AppRepository extends JpaRepository<App, Long> {
 
     boolean existsByAppUUID(String appUUID);
 
+    App findByAppUUID(String appUUID);
+
     @Query("SELECT a, AVG(r.rating) as avgRating " +
             "FROM App a JOIN a.reviews r " +
             "WHERE r.date BETWEEN :since AND :until " +
@@ -23,6 +25,7 @@ public interface AppRepository extends JpaRepository<App, Long> {
                                               @Param("until") LocalDate until,
                                               @Param("fromAge") int fromAge,
                                               @Param("toAge") int toAge);
+
 
 //    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.app.appUUID = :appUUID")
 //    Optional<Double> computeAverageRatingByUUID(@Param("appUUID") String appUUID);
