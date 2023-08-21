@@ -8,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(indexes = @Index(name = "idx_app_uuid", columnList = "appUUID"))
 public class App {
 
     @Id
