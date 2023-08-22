@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class MonthlyCsvReportGenerationService {
-    @Value("{app-rating.folder.monthly-report-csv}")
+    @Value("${app-rating.folder.monthly-report-csv}")
     private String csvFolderPath;
 
     @Autowired
@@ -36,19 +36,21 @@ public class MonthlyCsvReportGenerationService {
 
     public void generateMonthlyCsvReport(LocalDate lastDayOfMonth) {
         LocalDate firstDayOfMonth = lastDayOfMonth.withDayOfMonth(1);
-
         List<Object[]> currentRatings = appRepository
-                .findAllAppsOrderedByAverageRating(firstDayOfMonth, lastDayOfMonth);
+                .findAllAppsWithAverageRating(firstDayOfMonth, lastDayOfMonth);
 
         LocalDate lastDayOfPreviousMonth = firstDayOfMonth.minusDays(1);
         LocalDate firstDayOfPreviousMonth = lastDayOfPreviousMonth.withDayOfMonth(1);
-
         List<Object[]> previousRatings = appRepository
-                .findAllAppsOrderedByAverageRating(firstDayOfPreviousMonth, lastDayOfPreviousMonth);
+                .findAllAppsWithAverageRating(firstDayOfPreviousMonth, lastDayOfPreviousMonth);
 
         List<AppRatingChangeDTO> sortedList = combineCurrentAndPreviousRatinbgList(currentRatings, previousRatings);
-
+        
         File csvFile = getCsvFile(firstDayOfMonth);
+        saveCsvReport(csvFile, sortedList);
+    }
+
+    private static void saveCsvReport(File csvFile, List<AppRatingChangeDTO> sortedList) {
         try (CSVWriter csvWriter = new CSVWriter(new FileWriter(csvFile))) {
             // Write header
             csvWriter.writeNext(new String[]{"appName", "appUUID", "averageRating", "previousAverageRating"});
@@ -99,7 +101,7 @@ public class MonthlyCsvReportGenerationService {
 
         List<AppRatingChangeDTO> sortedList = ratingChangeMap.values().stream()
                 .filter(dto -> dto.getAverageRating() != null && dto.getPreviousAverageRating() != null)
-                .sorted(Comparator.comparingDouble(dto -> dto.getAverageRating() - dto.getPreviousAverageRating()))
+                .sorted(Comparator.comparingDouble(dto -> dto.getPreviousAverageRating() - dto.getAverageRating()))
                 .collect(Collectors.toList());
         return sortedList;
     }

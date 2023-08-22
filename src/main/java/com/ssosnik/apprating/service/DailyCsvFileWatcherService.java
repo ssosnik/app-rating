@@ -12,7 +12,7 @@ import java.nio.file.*;
 @Service
 public class DailyCsvFileWatcherService {
 
-    @Value("{app-rating.folder.daily-csv}")
+    @Value("${app-rating.folder.daily-csv}")
     private String csvFolderPath;
 
     @Autowired

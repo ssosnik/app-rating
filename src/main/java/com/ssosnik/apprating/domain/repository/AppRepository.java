@@ -29,9 +29,8 @@ public interface AppRepository extends JpaRepository<App, Long> {
     @Query("SELECT a, AVG(r.rating) as avgRating " +
             "FROM App a JOIN a.reviews r " +
             "WHERE r.date BETWEEN :since AND :until " +
-            "GROUP BY a " +
-            "ORDER BY avgRating DESC")
-    List<Object[]> findAllAppsOrderedByAverageRating(@Param("since") LocalDate since,
-                                              @Param("until") LocalDate until);
+            "GROUP BY a ")
+    List<Object[]> findAllAppsWithAverageRating(@Param("since") LocalDate since,
+                                                @Param("until") LocalDate until);
 
 }
