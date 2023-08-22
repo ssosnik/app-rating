@@ -5,6 +5,7 @@ import com.opencsv.CSVWriter;
 import com.ssosnik.apprating.domain.App;
 import com.ssosnik.apprating.domain.repository.AppRepository;
 import com.ssosnik.apprating.dto.AppRatingChangeDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class MonthlyCsvReportGenerationService {
     @Value("${app-rating.folder.monthly-report-csv}")
     private String csvFolderPath;
@@ -48,6 +50,8 @@ public class MonthlyCsvReportGenerationService {
         
         File csvFile = getCsvFile(firstDayOfMonth);
         saveCsvReport(csvFile, sortedList);
+
+        log.info("Monthly-report-csv-file saved to: {} ", csvFile.getAbsolutePath());
     }
 
     private static void saveCsvReport(File csvFile, List<AppRatingChangeDTO> sortedList) {

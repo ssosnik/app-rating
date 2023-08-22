@@ -1,6 +1,7 @@
 package com.ssosnik.apprating.service;
 
 import com.ssosnik.apprating.event.DailyCsvLoadingCompletedEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.*;
 
 @Service
+@Slf4j
 public class DailyCsvFileWatcherService {
 
     @Value("${app-rating.folder.daily-csv}")
@@ -39,7 +41,7 @@ public class DailyCsvFileWatcherService {
                 key.reset();
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.warn("watch directory service interrupted", e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

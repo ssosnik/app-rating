@@ -8,6 +8,7 @@ import com.ssosnik.apprating.domain.Review;
 import com.ssosnik.apprating.domain.repository.AppRepository;
 import com.ssosnik.apprating.domain.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class DailyCsvFileProcessor {
 
     @Autowired
@@ -71,7 +73,6 @@ public class DailyCsvFileProcessor {
             throw new RuntimeException("Failed to read/parse CVS file", e);
         }
 
+        log.info("Daily-csv-file {} loaded to database", filePath.getFileName());
     }
-
-
 }
