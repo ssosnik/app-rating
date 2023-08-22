@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.time.LocalDate;
 
 @Service
 @Slf4j
@@ -33,7 +34,7 @@ public class DailyCsvFileWatcherService {
             while ((key = watchService.take()) != null) {
                 for (WatchEvent<?> event : key.pollEvents()) {
                     Path filePath = directory.resolve((Path) event.context());
-                    dailyCsvFileProcessor.processCsvFile(filePath);
+                    dailyCsvFileProcessor.processCsvFile(filePath, LocalDate.now());
 
                     // Publish the CsvLoadingCompletedEvent after CSV loading is done
                     eventPublisher.publishEvent(new DailyCsvLoadingCompletedEvent(filePath));

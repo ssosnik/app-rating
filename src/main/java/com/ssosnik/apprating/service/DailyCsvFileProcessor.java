@@ -31,7 +31,7 @@ public class DailyCsvFileProcessor {
     private ReviewRepository reviewRepository;
 
     @Transactional
-    public void processCsvFile(Path filePath) {
+    public void processCsvFile(Path filePath, LocalDate currentDate) {
         // Parse CSV file using a CSV parsing library (OpenCSV)
         // create entities (use a Map uuid2App)
         // persist (save) to database
@@ -64,7 +64,7 @@ public class DailyCsvFileProcessor {
                 review.setRating(Double.parseDouble(row[2]));
                 review.setReviewerAge(Integer.parseInt(row[3]));
                 review.setReviewerCountry(row[4]);
-                review.setDate(LocalDate.now());
+                review.setDate(currentDate);
                 review.setApp(app);
                 reviewRepository.save(review);
             }
@@ -75,4 +75,6 @@ public class DailyCsvFileProcessor {
 
         log.info("Daily-csv-file {} loaded to database", filePath.getFileName());
     }
+
+
 }
