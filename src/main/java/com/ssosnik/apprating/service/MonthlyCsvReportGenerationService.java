@@ -37,6 +37,14 @@ public class MonthlyCsvReportGenerationService {
 
 
     public void generateMonthlyCsvReport(LocalDate lastDayOfMonth) {
+        List<AppRatingChangeDTO> sortedList = computeSortedAppList(lastDayOfMonth);
+
+        File csvFile = getCsvFile(lastDayOfMonth);
+        saveCsvReport(csvFile, sortedList);
+        log.info("Monthly-report-csv-file saved to: {} ", csvFile.getAbsolutePath());
+    }
+
+    public List<AppRatingChangeDTO> computeSortedAppList(LocalDate lastDayOfMonth) {
         LocalDate firstDayOfMonth = lastDayOfMonth.withDayOfMonth(1);
         List<Object[]> currentRatings = appRepository
                 .findAllAppsWithAverageRating(firstDayOfMonth, lastDayOfMonth);
@@ -46,12 +54,8 @@ public class MonthlyCsvReportGenerationService {
         List<Object[]> previousRatings = appRepository
                 .findAllAppsWithAverageRating(firstDayOfPreviousMonth, lastDayOfPreviousMonth);
 
-        List<AppRatingChangeDTO> sortedList = combineCurrentAndPreviousRatinbgList(currentRatings, previousRatings);
-        
-        File csvFile = getCsvFile(firstDayOfMonth);
-        saveCsvReport(csvFile, sortedList);
-
-        log.info("Monthly-report-csv-file saved to: {} ", csvFile.getAbsolutePath());
+        List<AppRatingChangeDTO> sortedAppList = combineCurrentAndPreviousRatinbgList(currentRatings, previousRatings);
+        return sortedAppList;
     }
 
     private static void saveCsvReport(File csvFile, List<AppRatingChangeDTO> sortedList) {

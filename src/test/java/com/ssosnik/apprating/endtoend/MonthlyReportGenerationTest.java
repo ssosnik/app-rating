@@ -1,5 +1,6 @@
 package com.ssosnik.apprating.endtoend;
 
+import com.ssosnik.apprating.dto.AppRatingChangeDTO;
 import com.ssosnik.apprating.service.DailyCsvFileProcessor;
 import com.ssosnik.apprating.service.MonthlyCsvReportGenerationService;
 import jakarta.transaction.Transactional;
@@ -15,9 +16,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class EndToEndTest {
+public class MonthlyReportGenerationTest {
 
     @Autowired
     DailyCsvFileProcessor csvFileProcessor;
@@ -41,7 +45,15 @@ public class EndToEndTest {
         csvFilePath = getDailyCsvFile("app_rating-2023-08-31.csv");
         csvFileProcessor.processCsvFile(csvFilePath, aug31);
 
-        monthlyCsvReportGenerationService.generateMonthlyCsvReport(aug31);
+        // Step 3: Generate monthly report
+        List<AppRatingChangeDTO> sortedAppList = monthlyCsvReportGenerationService.computeSortedAppList(aug31);
+
+        // Step 4: Test order of apps
+        assertEquals(4, sortedAppList.size());
+        assertEquals("Magic Scanner", sortedAppList.get(0).getAppName());
+        assertEquals("Quickphoto", sortedAppList.get(1).getAppName());
+        assertEquals("SciCalc", sortedAppList.get(2).getAppName());
+        assertEquals("Mobile Notepad", sortedAppList.get(3).getAppName());
 
     }
 
@@ -51,5 +63,6 @@ public class EndToEndTest {
         Files.copy(resource.getInputStream(), csvFilePath, StandardCopyOption.REPLACE_EXISTING);
         return csvFilePath;
     }
+
 
 }
