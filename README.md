@@ -1,12 +1,12 @@
 # Overview
-This project (app-rating) is Spring Boot Server with following functions:
+This project app-rating is Spring Boot Server with following functions:
 - Loading CSV files (app-ratings) to database. The operation is launched after a CSV file appears in the daily-csv-folder
 - Generating monthly reports (trending-apps). The operation is launched on the last day of every month after loading daily-csv file is completed.    
 - Accessing data via REST end-points:
   - `GET /api/{appUuid}/avg` - computes average rating for and app in a period given by since/until dates
-  - `GET /api/top-apps/{ageGroup}` - return a list of top apps in a given age-group in a period given by since/until dates
+  - `GET /api/top-apps/{ageGroup}` - returns a list of top apps in a given age-group in a period given by since/until dates
 - Generation of random data by REST end-point:
-  - `POST /data-generator/random-data` - generate random data (apps, reviews) for manual tests
+  - `POST /data-generator/random-data` - generates random data (apps, reviews) for manual tests
 
 This project was written during a recruitment. Task specification in Polish is in docs/task.MD.pdf
 
@@ -28,7 +28,7 @@ Here's a screenshot of the Swagger UI in action:
 ![Swagger UI Screenshot](docs/swagger-ui.png)
 ## Configuration
 The configuration could be done by placing a custom application.properties file in the same folder as app-rating-0.0.1-SNAPSHOT.jar.
-Default config is show below:
+Default config is shown below:
 ```properties
 server.port=8080
 build.version=@project.version@
@@ -174,6 +174,11 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<Double> findAverageRatingByAppUUIDAndDateBetween(String appUUID, LocalDate since, LocalDate until);
 }
 ```
+
+## Unit tests
+There are only two example tests:
+- DataGenerationServiceTest - test the random data init method with mocking
+- MonthlyReportGenerationTest - test MonthlyReportGeneration without mocking. It is like a real life scenario consisting of 3 steps. 
 
 ## Technical Details
 - `WatchService` interface from `java.nio` is used to observe `daily-csv` folder.
