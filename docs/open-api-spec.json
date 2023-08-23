@@ -1,15 +1,27 @@
 {
     "components": {
+        "schemas": {
+            "AppRatingDTO": {
+                "properties": {
+                    "appName": {
+                        "type": "string"
+                    },
+                    "appUUID": {
+                        "type": "string"
+                    },
+                    "averageRating": {
+                        "format": "double",
+                        "type": "number"
+                    }
+                },
+                "type": "object"
+            }
+        }
     },
     "info": {
-        "contact": {
-            "email": "s.sosnik@gmail.com",
-            "name": "Sebastian Sosnik",
-            "url": "https://github.com/ssosnik/app-rating"
-        },
+        "description": "Offers 2 end-points for filtering and sorting apps by rating and age-group",
         "title": "Apps Rating OpenAPI definition",
-        "description": "Filter and sort apps by rating",
-        "version": "v1.0"
+        "version": "0.0.1-SNAPSHOT"
     },
     "openapi": "3.0.1",
     "paths": {
@@ -49,7 +61,8 @@
                         "content": {
                             "*/*": {
                                 "schema": {
-                                    "type": "string"
+                                    "format": "double",
+                                    "type": "number"
                                 }
                             }
                         },
@@ -63,7 +76,7 @@
         },
         "/api/top-apps/{ageGroup}": {
             "get": {
-                "operationId": "topAppsForAgeGroup",
+                "operationId": "topApsForAgeGroup",
                 "parameters": [
                     {
                         "in": "path",
@@ -106,7 +119,10 @@
                         "content": {
                             "*/*": {
                                 "schema": {
-                                    "type": "string"
+                                    "items": {
+                                        "$ref": "#/components/schemas/AppRatingDTO"
+                                    },
+                                    "type": "array"
                                 }
                             }
                         },
@@ -115,6 +131,46 @@
                 },
                 "tags": [
                     "app-rating-controller"
+                ]
+            }
+        },
+        "/data-generator/random-data": {
+            "post": {
+                "operationId": "generateRandomData",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "numberOfApps",
+                        "required": true,
+                        "schema": {
+                            "format": "int32",
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "numberOfReviews",
+                        "required": true,
+                        "schema": {
+                            "format": "int32",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "tags": [
+                    "data-generation-controller"
                 ]
             }
         }
