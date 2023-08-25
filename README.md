@@ -192,7 +192,8 @@ There are only two example tests:
 ## Possible improvements
 - Add interfaces to follow programming-to-interfaces idea. Definitely interfaces should be added for all service classes.
 - Use Sequence in entity classes (instead of Identity) for primary keys to speed up loading of data from CSV files (enable bulk loading)
-- Use Pageable interface from org.springframework in Repository classes to improve the speed of finding top100 apps 
+- Use Pageable interface from org.springframework in Repository classes to improve the speed of finding top100 apps
+- Add/Create Index for columns `date` and `reviewerAge` in `Review` table.
 - Add unit tests
 - Replace `age` by `birth_date` in CSV file and Review table (entity)
 - Improve exception-handling (add custom exceptions and GlobalExceptionHandler)
