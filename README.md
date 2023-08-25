@@ -1,5 +1,5 @@
 # Overview
-This project app-rating is Spring Boot Server with following functions:
+This project __app-rating__ is a Spring Boot Server with following functions:
 - Loading CSV files (app-ratings) to database. The operation is launched after a CSV file appears in the daily-csv-folder
 - Generating monthly reports (trending-apps). The operation is launched on the last day of every month after loading daily-csv file is completed.    
 - Accessing data via REST end-points:
@@ -195,4 +195,6 @@ There are only two example tests:
 - Use Pageable interface from org.springframework in Repository classes to improve the speed of finding top100 apps 
 - Add unit tests
 - Replace `age` by `birth_date` in CSV file and Review table (entity)
+- Improve exception-handling (add custom exceptions and GlobalExceptionHandler)
+- Improve documentation of REST API (in Open-API-specification) using Spring Boot annotations: @Api, @ApiOperation, @ApiResponse, etc.
 
